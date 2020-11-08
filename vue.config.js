@@ -1,12 +1,14 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || 'K的回国通道' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -24,7 +26,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: '/v2ray/',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
@@ -49,14 +51,20 @@ module.exports = {
     },
     after: require('./mock/mock-server.js')
   },
-  configureWebpack: {
+  configureWebpack: config=>{
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
-    name: name,
-    resolve: {
-      alias: {
-        '@': resolve('src')
-      }
+    config.name = name;
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+    config.resolve.alias['@'] = resolve('src');
+    if(config.mode === "production"){
+      // use gz
+      config.plugins.push(
+          new CompressionWebpackPlugin(),
+          new BundleAnalyzerPlugin(),
+      );
+      config.devtool = false;
     }
   },
   chainWebpack(config) {
@@ -133,6 +141,7 @@ module.exports = {
               }
             })
           config.optimization.runtimeChunk('single')
+          config.plugin
         }
       )
   }

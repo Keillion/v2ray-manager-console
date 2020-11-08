@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Connect The World',
+  title: 'K的回国通道',
 
   /**
    * @type {boolean} true | false

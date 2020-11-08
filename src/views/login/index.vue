@@ -1,12 +1,12 @@
 <template>
   <div class="login-container">
-     <github-corner class="github-corner" />
+    <!-- <github-corner class="github-corner" /> -->
     <div hidden>{{ autoLogin }}</div>
     <div v-if="loginVisible" id="login">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
         <div class="title-container">
-          <h3 class="title">登录</h3>
+          <h3 class="title">K的回国通道 登录</h3>
         </div>
 
         <el-form-item prop="email">
@@ -63,7 +63,7 @@
 
       <el-form ref="regForm" :model="regForm" :rules="regRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <h3 class="title">注册 </h3>
+          <h3 class="title">K的回国通道 注册</h3>
         </div>
 
         <el-form-item prop="email">
@@ -122,7 +122,7 @@
             tabindex="24"
           />
         </el-form-item>
-          <el-form-item prop="inviteCode">
+        <!--<el-form-item prop="inviteCode">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
@@ -134,7 +134,7 @@
             type="text"
             tabindex="22"
           />
-        </el-form-item>
+        </el-form-item>-->
 
         <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="reg">提交</el-button>
         <div class="tips">
@@ -154,7 +154,7 @@
 
       <el-form ref="forgotForm" :model="forgotForm" :rules="forgotRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <h3 class="title">找回密码 </h3>
+          <h3 class="title">K的回国通道 找回密码</h3>
         </div>
 
         <el-form-item prop="email">
@@ -233,14 +233,12 @@
 import { validEmail } from '@/utils/validate'
 import { sendEmail } from '@/api/email'
 import { reg, forgot } from '@/api/user'
-import md5  from 'js-md5'
-import GithubCorner from '@/components/GithubCorner'
-
-
+import md5 from 'js-md5'
+// import GithubCorner from '@/components/GithubCorner'
 
 export default {
   name: 'Login',
-  components :{GithubCorner},
+  // components :{GithubCorner},
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validEmail(value)) {
@@ -276,7 +274,7 @@ export default {
         password: '',
         password2: '',
         vCode: '',
-        inviteCode:""
+        inviteCode: ''
 
       },
       regForm: {
@@ -284,7 +282,7 @@ export default {
         password: '',
         password2: '',
         vCode: '',
-        inviteCode:''
+        inviteCode: ''
 
       },
       forgotRules: {
@@ -334,7 +332,7 @@ export default {
       if (!validEmail(email)) {
         this.$message.error('email不正确,不能获取验证码')
       } else {
-        sendEmail(email, type,inviteCode).then(resp => {
+        sendEmail(email, type, inviteCode).then(resp => {
           this.$message.success('邮件可能出现在你的垃圾箱中,请注意。')
           this.wait_timer = 89
           var that = this
@@ -356,8 +354,8 @@ export default {
         if (valid) {
           this.loading = true
 
-            const formData= Object.assign({},this.forgotForm )
-           formData.password=md5(formData.password)
+          const formData = Object.assign({}, this.forgotForm)
+          formData.password = md5(formData.password)
           forgot(formData).then(resp => {
             this.$message({
               message: '修改成功',
@@ -377,8 +375,8 @@ export default {
       this.$refs.regForm.validate(valid => {
         if (valid) {
           this.loading = true
-          const formData= Object.assign({},this.regForm )
-           formData.password=md5(formData.password)
+          const formData = Object.assign({}, this.regForm)
+          formData.password = md5(formData.password)
           reg(formData).then(resp => {
             this.$message({
               message: '注册成功',
@@ -432,8 +430,8 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-            const formData= Object.assign({},this.loginForm )
-           formData.password=md5(formData.password)
+          const formData = Object.assign({}, this.loginForm)
+          formData.password = md5(formData.password)
           this.$store.dispatch('user/login', formData).then(() => {
             console.log('2')
             this.$router.push({ path: this.redirect || '/' })
